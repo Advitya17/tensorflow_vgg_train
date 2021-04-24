@@ -2,7 +2,10 @@ import inspect
 import os
 
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 import time
 
 VGG_MEAN = [103.939, 116.779, 123.68]
@@ -17,7 +20,7 @@ class Vgg16:
             vgg16_npy_path = path
             print(path)
 
-        self.data_dict = np.load(vgg16_npy_path, encoding='latin1').item()
+        self.data_dict = np.load(vgg16_npy_path, encoding='latin1', allow_pickle=True).item()
         print("npy file loaded")
 
     def build(self, rgb):
