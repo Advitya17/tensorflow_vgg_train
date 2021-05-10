@@ -41,10 +41,15 @@ f = tf.concat(vgg_f, 0)
 print(f.shape)
 
 base_model = VGG16(weights='imagenet')
-model = Model(inputs=base_model.input, outputs=base_model.get_layer('block2_conv1').output)
+model = Model(inputs=base_model.input, outputs=base_model.get_layer('block5_conv3').output)
 
 features = model.predict(f)
 print(features.shape)
 features = tf.reshape(features, [counter, np.prod(features.shape)//counter])
-print(features.shape)
+print(features.numpy().shape)
+
+with open('vgg_feats.npy', 'wb') as fh:
+    np.save(fh, features.numpy())
+
+
 
