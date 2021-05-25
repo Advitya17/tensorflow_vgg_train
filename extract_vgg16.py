@@ -28,28 +28,30 @@ for img_f in feats:
             x = image.img_to_array(img)
             x = np.expand_dims(x, axis=0)
             x = preprocess_input(x)
-
+            #print(x.shape)
             vgg_f.append(x)
             print(counter)
             break
 
     # only for testing
-    if counter == 2:
-        break
+    #if counter == 10:
+    #    break
 
-f = tf.concat(vgg_f, 0)
-print(f.shape)
+#f = tf.concat(vgg_f, 0)
+#print(f.shape)
 
 base_model = VGG16(weights='imagenet')
 model = Model(inputs=base_model.input, outputs=base_model.get_layer('block5_conv3').output)
 
-features = model.predict(f)
-print(features.shape)
-features = tf.reshape(features, [counter, np.prod(features.shape)//counter])
-print(features.numpy().shape)
+for i in range(len(vgg_f)):
+    features = model.predict(vgg_f[i]) # f, batch_size=4
+    #print(features.shape)
+    features = features.flatten() #tf.reshape(features, [counter, np.prod(features.shape)//counter])
+    #print(features.numpy().shape)
+    vgg_f[i] = features
 
 with open('vgg_feats.npy', 'wb') as fh:
-    np.save(fh, features.numpy())
+    np.save(fh, vgg_f) # features.numpy()
 
 
 
